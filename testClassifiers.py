@@ -1,11 +1,13 @@
 import csv
 import random
 from knn import *
+from random import shuffle
 
 def loadDataset(filename, split, trainingSet=[] , testSet=[]):
 	with open(filename, 'rb') as csvfile:
 	    lines = csv.reader(csvfile)
 	    dataset = list(lines)
+	    shuffle(dataset)
 	    for x in range(len(dataset)-1):
 	        for y in range(4):
 	            dataset[x][y] = float(dataset[x][y])
@@ -14,10 +16,10 @@ def loadDataset(filename, split, trainingSet=[] , testSet=[]):
 	        else:
 	            testSet.append(dataset[x])
 
-def getAccuracy(testSet, predictions):
+def getAccuracy(testY, predictions):
 	correct = 0
 	for x in range(len(testSet)):
-		if (testSet[x] == predictions[x]):
+		if (testY[x] == predictions[x]): 
 			correct += 1
 	return (correct/float(len(testSet))) * 100.0
 
@@ -41,10 +43,8 @@ if __name__ == "__main__":
 		testSetY.append(row[-1])
 		del row[-1]
 
-
 	knn = KthNearestNeighbour(trainingSet, trainingSetY, testSet)
-	pred = knn.predict()
+	predictions = knn.predict()
 
-	# print testSetY
-	print 'PREDICTIONS:', pred
-	print getAccuracy(testSetY, pred)
+	print 'PREDICTIONS:', predictions
+	print getAccuracy(testSetY, predictions)

@@ -33,7 +33,7 @@ class KthNearestNeighbour:
 	'''
 	def findNeighbours(self, x, k):
 
-		print 'finding', k, 'nearest neighbours'
+		# print 'finding', k, 'nearest neighbours'
 
 		knn = []
 		distances = []
@@ -45,7 +45,6 @@ class KthNearestNeighbour:
 		
 		distances.sort(key=itemgetter(0)) #sort by distance
 		
-		print distances[:5]
 		
 		#get k nearest training samples 
 		for neighbour in range(0,k):
@@ -59,7 +58,7 @@ class KthNearestNeighbour:
 	'''
 	def predictPoint(self, knn):
 
-		print 'predicting a single data point...'
+		# print 'predicting a single data point...'
 
 		classCount = {}
 
@@ -100,9 +99,9 @@ class KthNearestNeighbour:
 
 	def predict(self):
 
-		print 'training KNN classifier...'
+		# print 'training KNN classifier...'
 
-		seed(1) #seeds randomization to ensure same split for every execution
+		# seed(1) #seeds randomization to ensure same split for every execution
 		# k_folds_X, k_folds_Y = self.cv_split(3)
 
 		# k_predictions = []
@@ -120,15 +119,14 @@ class KthNearestNeighbour:
 		# return k_predictions
 
 
-
 		predictions = []
 		for test_x in self.test_X:
-
-			print test_x
 
 			neighbours = self.findNeighbours(test_x, 3)
 			classif = self.predictPoint(neighbours)
 			predictions.append(classif)
+			print 'CLASSIFICATION', classif
 			
-		print predictions
+		print 'IM ABOUT TO RETURN SOMETHING IN PREDICT'
+		return predictions
 		
