@@ -1,13 +1,16 @@
 import csv
 import random
 from knn import *
+# from naive_bayes import *
 from random import shuffle
+from math import pow
+from sklearn.model_selection import KFold
 
-def loadDataset(filename, split, trainingSet=[] , testSet=[]):
+def loadDataset(filename, split, trainingSet, testSet):
+
 	with open(filename, 'rb') as csvfile:
 	    lines = csv.reader(csvfile)
 	    dataset = list(lines)
-	    shuffle(dataset)
 	    for x in range(len(dataset)-1):
 	        for y in range(4):
 	            dataset[x][y] = float(dataset[x][y])
@@ -15,13 +18,6 @@ def loadDataset(filename, split, trainingSet=[] , testSet=[]):
 	            trainingSet.append(dataset[x])
 	        else:
 	            testSet.append(dataset[x])
-
-def getAccuracy(testY, predictions):
-	correct = 0
-	for x in range(len(testSet)):
-		if (testY[x] == predictions[x]): 
-			correct += 1
-	return (correct/float(len(testSet))) * 100.0
 
 
 if __name__ == "__main__":
@@ -44,7 +40,14 @@ if __name__ == "__main__":
 		del row[-1]
 
 	knn = KthNearestNeighbour(trainingSet, trainingSetY, testSet)
-	predictions = knn.predict()
 
-	print 'PREDICTIONS:', predictions
-	print getAccuracy(testSetY, predictions)
+	#choosing k = N^(1/2)
+	k = int(pow(len(trainingSet), 0.5))
+	print 'chose value k =', k
+	predictions = knn.predict(k)
+
+	for x in range(len(predictions)):
+		print 'predicted=', predictions[x], ', actual=', testSetY[x]
+	print knn.getValidationAccuracy(predictions, testSetY)
+
+	
