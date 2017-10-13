@@ -6,13 +6,16 @@ from itertools import izip
 
 class MultinomialNaiveBayes:
 
-	def __init__(self, train_X, train_Y, test_X, smoothingParam=1.0):
+	def __init__(self, train_X, train_Y, test_X=None, smoothingParam=1.0):
 		self.train_X = train_X
 		self.train_Y = train_Y
-		self.test_X = test_X
 		self.smoothingParam = smoothingParam
 		self.ClassifDict = self.__groupByClass()
 		self.log_prob_by_class = self.__calc_class_prob()
+
+		if len(train_X) != len(train_Y):
+			print 'Error -- Training sets are not of same length.'
+			exit()
 
 
 	def __groupByClass(self):
@@ -51,7 +54,7 @@ class MultinomialNaiveBayes:
 		#adding laplace smoothing parameter... if no example from that class,
 		#it reduces to a prior probability of Pr=1/(|features|)
 		num_features = len(self.train_X[0])
-		count = len(self.ClassifDict.keys()) + 2
+		count = len(self.ClassifDict.keys()) + num_features
 
 		feature_counts = []
 
@@ -81,11 +84,16 @@ class MultinomialNaiveBayes:
 		x_feature_prob_by_class = []
 
 		feat_log_prob_by_class = self.__calc_conditional_prob()
+
+
 	
 		for x in X:
+
+
 			#using numpy array to make matrix multiplication easier
 			#multipling each feature's log probability into x
-			x_feature_prob_by_class.append(np.array(feat_log_prob_by_class) * x)
+
+			x_feature_prob_by_class.append(np.array(feat_log_prob_by_class) * np.array(x))
 
 		
 		for feat in x_feature_prob_by_class:
@@ -99,16 +107,18 @@ class MultinomialNaiveBayes:
 	#returns the 
 	def predict(self, X):
 		max = np.argmax(self.__calc_log_prob(X), axis=1)
+		
 		return max
 
 	def getValidationAccuracy(self, predictions, validationSet=None):
 
-		if not validationSet: validationSet = self.train_Y #1-fold validation
-
+		# if not validationSet: validationSet = self.train_Y #1-fold validation
 		correct = 0
 		for y in range(len(validationSet)):
 			if(validationSet[y] == predictions[y]):
 				correct += 1
+
+		print correct
 		return (float(correct) / len(validationSet)) * 100.0
 
 
