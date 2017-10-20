@@ -1,6 +1,7 @@
 '''
-	Assignment 2
-	written for COMP-551 (Applied Machine Learning)
+	NOTE: This is a really basic implementation and takes forever to run on large datasets.
+	Could be optimized to run more efficiently.
+
 '''
 
 import numpy as np 
@@ -21,19 +22,21 @@ class KthNearestNeighbour:
 			print 'X and Y need to be of same size.'
 			exit()
 
-	#straight-line distance of the path connecting two points
-	# x and y are both lists
+	'''
+		straight-line distance of the path connecting two points
+		x and y are both lists
+	'''
 	def __euclideanDist(self, x, y):
 		return sqrt(sum(pow(x_i - y_i, 2) for x_i, y_i in zip(x,y)))
 
 	'''
-	parameters: x = a single datapoint vector, k = the number of neighbours
-	looks at the Euclidean distance for each data point, finds its k-nearest neighbours.
-	The point is then classified into Whichever class is most frequent among the neighbours.
+		parameters: x = a single datapoint vector, k = the number of neighbours
+		looks at the Euclidean distance for each data point, finds its k-nearest neighbours.
+		The point is then classified into Whichever class is most frequent among the neighbours.
 	'''
 	def __findNeighbours(self, x, k):
 
-		# print 'finding', k, 'nearest neighbours'
+		print 'finding', k, 'nearest neighbours'
 
 		knn = []
 		distances = []
@@ -54,11 +57,11 @@ class KthNearestNeighbour:
 
 
 	'''
-	Takes as parameter a list of k-nearest neighbours for a data point.
+		Takes as parameter a list of k-nearest neighbours for a data point.
 	'''
 	def __predictPoint(self, knn):
 
-		# print 'predicting a single data point...'
+		print 'predicting a single data point...'
 
 		classCount = {}
 

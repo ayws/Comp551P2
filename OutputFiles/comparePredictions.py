@@ -50,5 +50,5 @@ def compare(f1, f2):
 	countOccurances(toList(f2))
 
 
-compare('./outputFiles/predictions.csv', './outputFiles/predictions_tfidf.csv')
-compare('./outputFiles/predictions_tfidf.csv', './outputFiles/predictions_tfidf2.csv')
+compare('./predictions.csv', './predictions_tfidf.csv')
+compare('./predictions_tfidf.csv', './predictions_tfidf2.csv')

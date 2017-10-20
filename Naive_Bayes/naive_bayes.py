@@ -11,7 +11,7 @@ class MultinomialNaiveBayes:
 		self.train_Y = train_Y
 		self.smoothingParam = smoothingParam
 		self.ClassifDict = self.__groupByClass()
-		self.log_prob_by_class = self.__calc_class_prob()
+		self.class_prior = self.__calc_prior()
 
 		if len(train_X) != len(train_Y):
 			print 'Error -- Training sets are not of same length.'
@@ -40,20 +40,20 @@ class MultinomialNaiveBayes:
 		Returns a list with P(y), the prior log probability of each class.
 		Size: 1 * # classes
 	'''
-	def __calc_class_prob(self):
+	def __calc_prior(self):
 
-		log_prob_by_class = []
+		class_prior = []
 
 		for (classif, vectors) in self.ClassifDict.iteritems():
-			log_prob_by_class.append(np.log(len(vectors) / float(len(self.train_X))))
+			class_prior.append(np.log(len(vectors) / float(len(self.train_X))))
 
-		return log_prob_by_class
+		return class_prior
 
 	'''
 		Calculates P(x|c) with Laplace Smoothing: P(x|c) = count(x,c)+ delta / (# classes + # features in class c)
 		Returns a list of lists of size:  # classes * # features
 	'''
-	def __calc_conditional_prob(self):
+	def __calc_likelihood(self):
 
 		num_features = len(self.train_X[0])
 		count = len(self.ClassifDict.keys()) + num_features # (# classes + # features in class c)
@@ -65,43 +65,43 @@ class MultinomialNaiveBayes:
 
 		sums_of_features = [sum(f) for f in feature_counts]
 	
-		feat_log_prob_by_class = []
+		feat_likelihood = []
 		for i  in range(len(feature_counts)):
 			log_prob = []
 			for feat in feature_counts[i]:
 				log_prob.append(np.log(feat / sums_of_features[i]))
-			feat_log_prob_by_class.append(log_prob)
+			feat_likelihood.append(log_prob)
 
-		return feat_log_prob_by_class
+		return feat_likelihood
 
 	
 	'''
 		Calculates P(y|x)
 		Returns a list of lists of size len(X) * # classes
 	'''
-	def __calc_log_prob(self, X):
+	def __calc_posterior(self, X):
 
-		x_log_prob_by_class = []
+		x_posterior_prob = []
 		x_feat_prob_by_class = []
-		feat_log_prob_by_class = self.__calc_conditional_prob()
+		feat_likelihood = self.__calc_likelihood()
 
 		#multiplies each feature's log probability into x using numpy matrix multiplication
 		for x in X:
-			x_feat_prob_by_class.append(np.array(feat_log_prob_by_class) * np.array(x))
+			x_feat_prob_by_class.append(np.array(feat_likelihood) * np.array(x))
 		
 		#sum [ log P(y_i) + sum [log P(x_i,j | y_i)]]
 		#add up the probabilities of all the features in a class and the class's log probability
 		for feat in x_feat_prob_by_class:
-			x_log_prob_by_class.append((self.log_prob_by_class + feat.sum(axis=1)).tolist())
+			x_posterior_prob.append((self.class_prior + feat.sum(axis=1)).tolist())
 
-		return x_log_prob_by_class
+		return x_posterior_prob
 			
 
 	'''
 		Returns the max calculated probability row of the numpy array.
 	'''
 	def predict(self, X):
-		return np.argmax(self.__calc_log_prob(X), axis=1)
+		return np.argmax(self.__calc_posterior(X), axis=1)
 
 	'''
 		Input is two lists of either integers or strings (classes). 

@@ -26,12 +26,17 @@ def preprocessYVals(filename):
 	data_list = [int(x) for x in data_list]
 	return data_list
 
-#test is a boolean indicating whether or not it's a test set
+'''
+parameters: 
+	filename :string, self-explanatory
+	testVect: a TfidfVectorizer instance. Only passed if we're preprocessing the test set.
+'''
 def preprocess(filename, testVect=None):
 
 	data = toList(filename)
 
 	#tokenize each sentence into characters
+	#(1,1) = unigrams, (1,2) = unigrams & bigrams
 	vect = TfidfVectorizer( analyzer='char',
 							strip_accents=None,
 							ngram_range=(1,1),
@@ -45,7 +50,6 @@ def preprocess(filename, testVect=None):
 		return matrix
 	else: 
 		matrix = vect.fit_transform(data).toarray()
-		print vect.vocabulary_
 		return matrix, vect
 
 
