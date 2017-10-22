@@ -39,17 +39,17 @@ if __name__ == "__main__":
 
 
 	############################## ACTUAL PREDICTIONS ######################
-	# train_set_X = processed_X
-	# train_set_Y = processed_Y
-	# test_set = preprocess('./data/test_set_x.csv', testVect=vect)
-	# final_nb = MultinomialNaiveBayes(train_set_X, train_set_Y)
-	# predictions = final_nb.predict(test_set)
+	train_set_X = processed_X
+	train_set_Y = processed_Y
+	test_set = preprocess('./data/test_set_x.csv', testVect=vect)
+	final_nb = MultinomialNaiveBayes(train_set_X, train_set_Y)
+	predictions = final_nb.predict(test_set)
 
-	# with open('predictions_tfidf2.csv', 'w') as predictFile:
-	# 	fieldnames = ['Id', 'Category']
-	# 	writer = csv.DictWriter(predictFile, fieldnames=fieldnames)
-	# 	writer.writeheader()
-	# 	for i in range(len(predictions)):
-	# 		writer.writerow({'Id': i, 'Category': predictions[i]})
+	with open('predictions_tfidf.csv', 'w') as predictFile:
+		fieldnames = ['Id', 'Category']
+		writer = csv.DictWriter(predictFile, fieldnames=fieldnames)
+		writer.writeheader()
+		for i in range(len(predictions)):
+			writer.writerow({'Id': i, 'Category': predictions[i]})
 
 	

@@ -39,7 +39,7 @@ def preprocess(filename, testVect=None):
 	#(1,1) = unigrams, (1,2) = unigrams & bigrams
 	vect = TfidfVectorizer( analyzer='char',
 							strip_accents=None,
-							ngram_range=(1,1),
+							ngram_range=(1,2),
 							lowercase=True,
 							token_pattern='(?u)\\b\\w+\\b'
 							)
