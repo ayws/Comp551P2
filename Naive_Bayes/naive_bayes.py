@@ -56,8 +56,7 @@ class MultinomialNaiveBayes:
 	def __calc_likelihood(self):
 
 		num_features = len(self.train_X[0])
-		count = len(self.ClassifDict.keys()) + num_features # (# classes + # features in class c)
-
+		
 		feature_counts = []
 		for (classif, vect_list) in self.ClassifDict.iteritems():
 			new_vect = [sum(x) + self.smoothingParam for x in izip(*vect_list)] #count(x,c)+1 
@@ -116,5 +115,4 @@ class MultinomialNaiveBayes:
 
 		print correct
 		return (float(correct) / len(validationSet)) * 100.0
-
 

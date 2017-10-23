@@ -43,12 +43,22 @@ def compare(f1, f2):
 		if (x[0] == x[1]): same += 1
 	print (float(same) / total * 100)
 
-	print 'BREAKDOWN BY CLASS FOR FILE', f1
-	countOccurances(toList(f1))
-	print '_________________'
-	print 'BREAKDOWN BY CLASS FOR FILE', f2
-	countOccurances(toList(f2))
-
-
-compare('./predictions.csv', './predictions_tfidf.csv')
-compare('./predictions_tfidf.csv', './predictions_tfidf2.csv')
+print "COMPARING SKLEARN'S MODEL WITH ALPHA=1.0 AND OUR IMPLEMENTATION"
+compare('./predictions_tfidf.csv', './predictions_sklearn2.csv')
+print 'COMPARING COUNT VECTORS AND RANDOM BASELINE'
+compare('./predictions_count_vector.csv', './random_baseline.csv')
+print 'COMPARING TF-IDF UNIGRAM & BIGRAM VECTORS AND RANDOM BASELINE'
+compare('./predictions_tfidf.csv', './random_baseline.csv')
+print 'COMPARING TF-IDF UNIGRAM VECTORS AND RANDOM BASELINE'
+compare('./predictions_tfidf_unigrams.csv', './random_baseline.csv')
+print 'COMPARING TF-IDF UNIGRAM VECTORS AND TF-IDF UNIGRAM & BIGRAM VECTORS'
+compare('./predictions_tfidf_unigrams.csv', './predictions_tfidf.csv')
+print '_______________________'
+print 'CLASSFICATION BREAKDOWNS FOR BASELINE'
+countOccurances(toList('./random_baseline.csv'))
+print 'CLASSFICATION BREAKDOWNS FOR COUNT VECTORS'
+countOccurances(toList('./predictions_count_vector.csv'))
+print 'CLASSFICATION BREAKDOWNS FOR TF-IDF UNIGRAM VECTORS'
+countOccurances(toList('./predictions_tfidf_unigrams.csv'))
+print 'CLASSFICATION BREAKDOWNS FOR TF-IDF UNIGRAM & BIGRAM VECTORS'
+countOccurances(toList('./predictions_tfidf.csv'))
