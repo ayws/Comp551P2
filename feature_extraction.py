@@ -1,5 +1,6 @@
 import codecs
 import csv
+import numpy as np
 from string import digits
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
