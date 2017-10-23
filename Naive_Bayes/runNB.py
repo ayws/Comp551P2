@@ -5,6 +5,7 @@ import random
 from naive_bayes import *
 import csv
 from sklearn.model_selection import KFold, cross_val_score
+from sklearn import naive_bayes
 
 
 if __name__ == "__main__":
@@ -28,24 +29,29 @@ if __name__ == "__main__":
 		train_set_X, test_set_X = processed_X[train], processed_X[test]
 		train_set_Y, test_set_Y = processed_Y[train], processed_Y[test]
 
-		nb = MultinomialNaiveBayes(train_set_X, train_set_Y)
+		nb = MultinomialNaiveBayes(train_set_X, train_set_Y, 0.5)
+		# nb = naive_bayes.MultinomialNB()
+		# nb.fit(train_set_X, train_set_Y)
 		predictions = nb.predict(test_set_X)
 		accuracy = nb.getValidationAccuracy(predictions, test_set_Y)
 		accuracies.append(accuracy)
+
 		print 'ACCURACY OF CURRENT FOLD IS:', accuracy
 
-	meanAccuracy = sum(accuracies) / float(len(accuracies))
+	meanAccuracy = sum(accuracies) / float(len(accuratcies))
 	print 'MEAN ACCURACY OF FOLDS IS:', meanAccuracy
 
 
 	############################## ACTUAL PREDICTIONS ######################
 	train_set_X = processed_X
 	train_set_Y = processed_Y
-	test_set = preprocess('./data/test_set_x.csv', testVect=vect)
+	test_set = preprocess('../data/test_set_x.csv', testVect=vect)
 	final_nb = MultinomialNaiveBayes(train_set_X, train_set_Y)
+	# final_nb = naive_bayes.MultinomialNB(alpha=1.0)
+	# final_nb.fit(train_set_X, train_set_Y)
 	predictions = final_nb.predict(test_set)
 
-	with open('predictions_tfidf.csv', 'w') as predictFile:
+	with open('predictions_sklearn2.csv', 'w') as predictFile:
 		fieldnames = ['Id', 'Category']
 		writer = csv.DictWriter(predictFile, fieldnames=fieldnames)
 		writer.writeheader()
